@@ -1,11 +1,13 @@
 import axios from "axios";
 
-const BASEURL = "https://api.giphy.com/v1/gifs/search?q=";
-const APIKEY = "&api_key=dc6zaTOxFJmzC&limit=20";
+const BASEURL = "https://randomapi.com/api/?";
+const APIKEY = "key=" + process.env.REACT_APP_API_KEY;
+const REF = "&ref=" + "yz1sf340"
+const RESULTS = "&results=" + 10;
 
-// Export an object with a "search" method that searches the Giphy API for the passed query
+// Export an object with a "search" method that searches RandomAPI for the passed query
 export default {
   search: function(query) {
-    return axios.get(BASEURL + query + APIKEY);
+    return axios.get(BASEURL + APIKEY + REF + RESULTS );
   }
 };
