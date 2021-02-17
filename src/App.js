@@ -2,12 +2,16 @@ import React from 'react';
 import EmployeeCard from './components/EmployeeCard';
 import Title from './components/Title';
 import Wrapper from './components/Wrapper';
-import logo from './logo.svg';
+import API from "./utils/API";
 import './App.css';
+
+require('dotenv').config()
 
 class App extends React.Component {
 
   state = { 
+    search: "",
+    results: [],
     employees: [
       {
         name: "John Johnson",
@@ -36,15 +40,49 @@ class App extends React.Component {
     ]
   }
 
+  deleteFunction = ( id ) => {
+    this.setState({ friends: this.state.friends.filter( elem => id != elem.id ) });
+  }
+
+  // When this component mounts, search the Giphy API for pictures of kittens
+  componentDidMount() {
+    this.searchRandomAPI("&");
+  }
+
+  searchRandomAPI = query => {
+    API.search(query)
+      .then( ( res ) => {
+        console.log( "API data", res.data.results )
+        this.setState({ results: res.data.results })
+      })
+      .catch(err => console.log(err));
+  };
+
+  handleInputChange = event => {
+    const name = event.target.name;
+    const value = event.target.value;
+    this.setState({
+      [name]: value
+    });
+  };
+
+  // When the form is submitted, search the Giphy API for `this.state.search`
+  handleFormSubmit = event => {
+    event.preventDefault();
+    this.searchGiphy(this.state.search);
+  };
+
+
   render() {  
     return (
       <Wrapper>
         <Title>Employees</Title>
-        { this.state.employees.map( elem => <EmployeeCard name={ elem.name }
+        { this.state.results.map( elem => <EmployeeCard 
+          key={ elem.id }
+          name={ elem.name }
           image={ elem.image }
           occupation={ elem.occupation }
           location={ elem.location } 
-          id={ elem.id }
           delete={ this.deleteFunction } />)}
       </Wrapper>
     );
