@@ -1,5 +1,5 @@
 import React from 'react';
-import EmployeeCard from './components/EmployeeCard';
+import EmployeeRow from './components/EmployeeRow';
 import Title from './components/Title';
 import Wrapper from './components/Wrapper';
 import API from "./utils/API";
@@ -11,33 +11,8 @@ class App extends React.Component {
 
   state = { 
     search: "",
-    results: [],
-    employees: [
-      {
-        name: "John Johnson",
-        occupation: "Blacksmith",
-        location: "New York, NY",
-        id: 1,
-      },
-      {
-        name: "Susan Smith",
-        occupation: "Tailor",
-        location: "Seattle, WA",
-        id: 2,
-      },
-      {
-        name: "Rex McCrexler",
-        occupation: "Doctor",
-        location: "Grabbitland, PA",
-        id: 3,
-      },
-      {
-        name: "Sammy Squiggles",
-        occupation: "Lawyer",
-        location: "Los Angeles, CA",
-        id: 4,
-      },
-    ]
+    results: []
+    // id, picture,name,phone,email,dob
   }
 
   deleteFunction = ( id ) => {
@@ -52,7 +27,6 @@ class App extends React.Component {
   searchRandomAPI = query => {
     API.search(query)
       .then( ( res ) => {
-        console.log( "API data", res.data.results )
         this.setState({ results: res.data.results })
       })
       .catch(err => console.log(err));
@@ -66,24 +40,39 @@ class App extends React.Component {
     });
   };
 
-  // When the form is submitted, search the Giphy API for `this.state.search`
-  handleFormSubmit = event => {
-    event.preventDefault();
-    this.searchGiphy(this.state.search);
-  };
-
-
   render() {  
     return (
       <Wrapper>
         <Title>Employees</Title>
-        { this.state.results.map( elem => <EmployeeCard 
-          key={ elem.id }
-          name={ elem.name }
-          image={ elem.image }
-          occupation={ elem.occupation }
-          location={ elem.location } 
-          delete={ this.deleteFunction } />)}
+        <form>        
+          <input type="text"></input>
+          <button className="btn-primary">
+            Search
+          </button>
+        </form>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Pic</th>
+              <th scope="col">Name</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Email</th>
+              <th scope="col">Age</th>
+            </tr>
+          </thead>
+          <tbody>
+            { this.state.results.map( ( elem, index ) => <EmployeeRow
+              key={ index }
+              SSN={ elem.id.value }
+              name={ elem.name }
+              picture={ elem.picture }
+              phone={ elem.phone }
+              email={ elem.email } 
+              dob={ elem.dob } 
+            />)}
+          </tbody>
+        </table>
       </Wrapper>
     );
   }
