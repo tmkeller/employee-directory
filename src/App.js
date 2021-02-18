@@ -11,12 +11,10 @@ class App extends React.Component {
 
   state = { 
     search: "",
+    sortBy: "",
+    filtered: [],
     results: []
     // id, picture,name,phone,email,dob
-  }
-
-  deleteFunction = ( id ) => {
-    this.setState({ friends: this.state.friends.filter( elem => id != elem.id ) });
   }
 
   // When this component mounts, search the Giphy API for pictures of kittens
@@ -27,7 +25,7 @@ class App extends React.Component {
   searchRandomAPI = query => {
     API.search(query)
       .then( ( res ) => {
-        this.setState({ results: res.data.results })
+        this.setState({ results: res.data.results, filtered: res.data.results })
       })
       .catch(err => console.log(err));
   };
@@ -42,11 +40,42 @@ class App extends React.Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    // TODO: Get the results state.
-    // TODO: Sort the array.
-    // TODO: Filter the array by the element you want to filter it by.
-    // TODO: Set the state to the new array.
-    // TODO: Celebrate.
+    // Filter by the search term. Complicated chain of 'equals' and 'or' that tests each property in 
+    // an array object to check if it contains the string put into the input.
+    let filtered = this.state.results;
+    if ( this.state.search ) { 
+      filtered = this.state.results.filter( person => 
+        ( person.name.title ) === this.state.search || 
+        ( person.name.first ) === this.state.search || 
+        ( person.name.last ) === this.state.search || 
+        ( person.email ) === this.state.search || 
+        ( person.phone ) === this.state.search || 
+        ( person.id.value ) === this.state.search );
+    }
+    // Implement the sort method on the filtered array in a unique way depending on the selected option.
+    let sortBy = this.state.sortBy;
+    if ( sortBy ) {
+      switch ( sortBy ) {
+        case "id":
+          filtered.sort(( a, b ) => a.id.value < b.id.value ? -1 : 1 );
+          break
+        case "name":
+          filtered.sort(( a, b ) => a.name.last < b.name.last ? -1 : 1 );
+          break
+        case "phone":
+          filtered.sort(( a, b ) => a.phone < b.phone ? -1 : 1 );
+          break
+        case "email":
+          filtered.sort(( a, b ) => a.email < b.email ? -1 : 1 );
+          break
+        case "age": 
+          filtered.sort(( a, b ) => a.dob.age < b.dob.age ? -1 : 1 );
+          break
+      }
+    }
+    this.setState({
+      filtered: filtered
+    })
   }
 
   render() {  
@@ -55,17 +84,28 @@ class App extends React.Component {
         <Title>Employees</Title>
         <form>
           <div className="form-group">      
-            <input className="form-control" type="text"></input>
+            <input 
+              onChange={ this.handleInputChange } 
+              name="search" 
+              className="form-control" 
+              type="text" 
+            />
           </div>
           <br/>
           <div className="form-group">
             <label>Sort by:</label>
-            <select className="browser-default custom-select">
-              <option value="ID">ID</option>
-              <option value="Name">Name</option>
-              <option value="Phone">Phone</option>
-              <option value="Email">Email</option>
-              <option value="Age">Age</option>
+            <select 
+              onChange={ this.handleInputChange } 
+              className="browser-default custom-select" 
+              name="sortBy"
+              defaultValue="disabled"
+            >
+              <option value="disabled" disabled>Sort by:</option>
+              <option value="id">ID</option>
+              <option value="name">Name</option>
+              <option value="phone">Phone</option>
+              <option value="email">Email</option>
+              <option value="age">Age</option>
             </select>
           </div>
           <div className="form-group">  
@@ -86,7 +126,7 @@ class App extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { this.state.results.map( ( elem, index ) => <EmployeeRow
+            { this.state.filtered.map( ( elem, index ) => <EmployeeRow
               key={ index }
               SSN={ elem.id.value }
               name={ elem.name }
