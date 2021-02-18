@@ -11,6 +11,7 @@ class App extends React.Component {
 
   state = { 
     search: "",
+    sortBy: "",
     filtered: [],
     results: []
     // id, picture,name,phone,email,dob
@@ -24,7 +25,7 @@ class App extends React.Component {
   searchRandomAPI = query => {
     API.search(query)
       .then( ( res ) => {
-        this.setState({ results: res.data.results })
+        this.setState({ results: res.data.results, filtered: res.data.results })
       })
       .catch(err => console.log(err));
   };
@@ -52,7 +53,31 @@ class App extends React.Component {
         ( person.id.value ) === this.state.search );
     }
     console.log( "Filtered", filtered );
-    // TODO: Implement the sort method on the filtered array in a unique way 
+    // TODO: Implement the sort method on the filtered array in a unique way depending on the selected option.
+    let sortBy = this.state.sortBy;
+    console.log( "sortBy", sortBy);
+    if ( sortBy ) {
+      switch ( sortBy ) {
+        case "id":
+          filtered.sort(( a, b ) => a.id.value < b.id.value ? -1 : 1 );
+          break
+        case "name":
+          filtered.sort(( a, b ) => a.name.last < b.name.last ? -1 : 1 );
+          break
+        case "phone":
+          filtered.sort(( a, b ) => a.phone < b.phone ? -1 : 1 );
+          break
+        case "email":
+          filtered.sort(( a, b ) => a.email < b.email ? -1 : 1 );
+          break
+        case "age": 
+          filtered.sort(( a, b ) => a.dob.age < b.dob.age ? -1 : 1 );
+          break
+      }
+    }
+    this.setState({
+      filtered: filtered
+    })
   }
 
   render() {  
@@ -71,7 +96,11 @@ class App extends React.Component {
           <br/>
           <div className="form-group">
             <label>Sort by:</label>
-            <select className="browser-default custom-select" name="sort_col">
+            <select 
+              onChange={ this.handleInputChange } 
+              className="browser-default custom-select" 
+              name="sortBy"
+            >
               <option value="id">ID</option>
               <option value="name">Name</option>
               <option value="phone">Phone</option>
@@ -97,7 +126,7 @@ class App extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { this.state.results.map( ( elem, index ) => <EmployeeRow
+            { this.state.filtered.map( ( elem, index ) => <EmployeeRow
               key={ index }
               SSN={ elem.id.value }
               name={ elem.name }
