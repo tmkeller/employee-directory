@@ -18,9 +18,9 @@ An employee directory, using fake employee data from RandomAPI, built for organi
 Clone the git into your chosen directory, use npm i to install all dependencies, and run the application using npm start.
 
 ## Technologies
-![html](https://img.shields.io/badge/html-20.4%25-orange)
-![javascript](https://img.shields.io/badge/javascript-58.8%25-yellow)
-![css](https://img.shields.io/badge/css-20.8%25-purple)
+![html](https://img.shields.io/badge/html-17.4%25-orange)
+![javascript](https://img.shields.io/badge/javascript-64.8%25-yellow)
+![css](https://img.shields.io/badge/css-17.8%25-purple)
 
 ## Usage
 The users will be generated in a table below, with 200 total. Typing in the input field below the title will include any fields that contain that exact word or phrase. The select menu will sort by that field, ascending. Press the submit button to filter and/or sort.
