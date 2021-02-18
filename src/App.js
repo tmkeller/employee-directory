@@ -52,10 +52,8 @@ class App extends React.Component {
         ( person.phone ) === this.state.search || 
         ( person.id.value ) === this.state.search );
     }
-    console.log( "Filtered", filtered );
-    // TODO: Implement the sort method on the filtered array in a unique way depending on the selected option.
+    // Implement the sort method on the filtered array in a unique way depending on the selected option.
     let sortBy = this.state.sortBy;
-    console.log( "sortBy", sortBy);
     if ( sortBy ) {
       switch ( sortBy ) {
         case "id":
@@ -100,7 +98,9 @@ class App extends React.Component {
               onChange={ this.handleInputChange } 
               className="browser-default custom-select" 
               name="sortBy"
+              defaultValue="disabled"
             >
+              <option value="disabled" disabled>Sort by:</option>
               <option value="id">ID</option>
               <option value="name">Name</option>
               <option value="phone">Phone</option>
