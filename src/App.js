@@ -11,12 +11,9 @@ class App extends React.Component {
 
   state = { 
     search: "",
+    filtered: [],
     results: []
     // id, picture,name,phone,email,dob
-  }
-
-  deleteFunction = ( id ) => {
-    this.setState({ friends: this.state.friends.filter( elem => id != elem.id ) });
   }
 
   // When this component mounts, search the Giphy API for pictures of kittens
@@ -42,11 +39,9 @@ class App extends React.Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    // TODO: Get the results state.
-    // TODO: Sort the array.
-    // TODO: Filter the array by the element you want to filter it by.
-    // TODO: Set the state to the new array.
-    // TODO: Celebrate.
+    // Filter by the search term
+    let filtered = this.state.results.filter( person => person.name.title === this.state.search || person.name.first === this.state.search || person.name.last === this.state.search || person.email === this.state.search || person.phone === this.state.search || person.id.value === this.state.search );
+    console.log( "Filtered", filtered );
   }
 
   render() {  
@@ -55,17 +50,22 @@ class App extends React.Component {
         <Title>Employees</Title>
         <form>
           <div className="form-group">      
-            <input className="form-control" type="text"></input>
+            <input 
+              onChange={ this.handleInputChange } 
+              name="search" 
+              className="form-control" 
+              type="text" 
+            />
           </div>
           <br/>
           <div className="form-group">
             <label>Sort by:</label>
-            <select className="browser-default custom-select">
-              <option value="ID">ID</option>
-              <option value="Name">Name</option>
-              <option value="Phone">Phone</option>
-              <option value="Email">Email</option>
-              <option value="Age">Age</option>
+            <select className="browser-default custom-select" name="sort_col">
+              <option value="id">ID</option>
+              <option value="name">Name</option>
+              <option value="phone">Phone</option>
+              <option value="email">Email</option>
+              <option value="age">Age</option>
             </select>
           </div>
           <div className="form-group">  
