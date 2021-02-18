@@ -39,9 +39,20 @@ class App extends React.Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    // Filter by the search term
-    let filtered = this.state.results.filter( person => person.name.title === this.state.search || person.name.first === this.state.search || person.name.last === this.state.search || person.email === this.state.search || person.phone === this.state.search || person.id.value === this.state.search );
+    // Filter by the search term. Complicated chain of 'equals' and 'or' that tests each property in 
+    // an array object to check if it contains the string put into the input.
+    let filtered = this.state.results;
+    if ( this.state.search ) { 
+      filtered = this.state.results.filter( person => 
+        ( person.name.title ) === this.state.search || 
+        ( person.name.first ) === this.state.search || 
+        ( person.name.last ) === this.state.search || 
+        ( person.email ) === this.state.search || 
+        ( person.phone ) === this.state.search || 
+        ( person.id.value ) === this.state.search );
+    }
     console.log( "Filtered", filtered );
+    // TODO: Implement the sort method on the filtered array in a unique way 
   }
 
   render() {  
