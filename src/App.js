@@ -21,7 +21,7 @@ class App extends React.Component {
 
   // When this component mounts, search the Giphy API for pictures of kittens
   componentDidMount() {
-    this.searchRandomAPI("&");
+    this.searchRandomAPI();
   }
 
   searchRandomAPI = query => {
@@ -40,15 +40,39 @@ class App extends React.Component {
     });
   };
 
+  handleFormSubmit = event => {
+    event.preventDefault();
+    // TODO: Get the results state.
+    // TODO: Sort the array.
+    // TODO: Filter the array by the element you want to filter it by.
+    // TODO: Set the state to the new array.
+    // TODO: Celebrate.
+  }
+
   render() {  
     return (
       <Wrapper>
         <Title>Employees</Title>
-        <form>        
-          <input type="text"></input>
-          <button className="btn-primary">
-            Search
-          </button>
+        <form>
+          <div className="form-group">      
+            <input className="form-control" type="text"></input>
+          </div>
+          <br/>
+          <div className="form-group">
+            <label>Sort by:</label>
+            <select className="browser-default custom-select">
+              <option value="ID">ID</option>
+              <option value="Name">Name</option>
+              <option value="Phone">Phone</option>
+              <option value="Email">Email</option>
+              <option value="Age">Age</option>
+            </select>
+          </div>
+          <div className="form-group">  
+            <button onClick={ this.handleFormSubmit } className="btn-primary">
+              Search
+            </button>
+          </div>
         </form>
         <table className="table">
           <thead>
